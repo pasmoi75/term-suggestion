@@ -61,11 +61,32 @@ Arguments :
 2. nombre de suggestions (optionnel, défaut : 10)
 3. `--dico <chemin>` — dictionnaire à utiliser (optionnel, défaut : `data/dico.txt`)
 
+## Interface web
+
+Une interface graphique web permet de tester les suggestions sans passer par la ligne de commande.
+
+```bash
+npm run ui
+```
+
+Puis ouvrir [http://localhost:3456](http://localhost:3456) dans le navigateur. Le port par défaut est **3456** ; il peut être modifié via la variable d'environnement `PORT` :
+
+```bash
+PORT=8080 npm run ui
+```
+
+**Utilisation :**
+
+1. Charger un fichier dictionnaire (`.txt` ou `.json`) via le sélecteur de fichier.
+2. Saisir un mot à rechercher (minuscules alphanumériques, comme en CLI).
+3. Les suggestions s'affichent en direct au fil de la frappe ; le nombre de résultats est configurable.
+
 ## Scripts
 
 | Commande | Description |
 |----------|-------------|
 | `npm run search -- <mot> [n] [--dico <chemin>]` | Lance une recherche |
+| `npm run ui` | Lance l'interface web graphique (port 3456 par défaut) |
 | `npm run build:dico` | Génère `data/dico.txt` à partir de `data/sources/` |
 | `npm run perf` | Mesure les performances (500k mots, 10 requêtes) |
 | `npm test` | Tests unitaires (Vitest) |
@@ -84,6 +105,11 @@ term-suggestion/
 │   ├── search-word.ts
 │   ├── build-dico.ts
 │   ├── measure-performance.ts
+│   └── serve-ui.ts
+├── ui/                              # interface web graphique
+│   ├── index.html
+│   ├── app.js
+│   └── style.css
 ├── src/                             # librairie (logique métier)
 │   ├── index.ts
 │   ├── get-suggestions.ts
@@ -107,6 +133,7 @@ term-suggestion/
 - **`data/sources/`** — données brutes téléchargées / sources externes. Ce ne sont **pas** des scripts : juste des fichiers de mots.
 - **`data/dico.txt`** — dictionnaire fusionné, produit par `npm run build:dico`.
 - **`scripts/`** — commandes exécutables (`search`, `build:dico`, bench…).
+- **`ui/`** — pages et assets de l'interface web (`npm run ui`).
 - **`src/`** — code réutilisable (algo + chargement dico + validation).
 
 ## API

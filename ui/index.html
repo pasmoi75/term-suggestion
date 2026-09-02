@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suggestions de termes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="layout">
+        <aside class="sidebar">
+          <header class="header">
+            <p class="eyebrow">Recherche floue</p>
+            <h1>Suggestions de termes</h1>
+            <p class="subtitle">
+              Chargez un dictionnaire, saisissez un mot — les suggestions les plus proches
+              s’affichent au fil de la frappe.
+            </p>
+          </header>
+
+          <div class="sidebar-controls">
+            <section class="field-group">
+              <label class="label" for="dictionary-input">Fichier dictionnaire</label>
+              <div class="file-row">
+                <input
+                  id="dictionary-input"
+                  class="file-input"
+                  type="file"
+                  accept=".txt,.json,text/plain,application/json"
+                />
+                <span id="dictionary-status" class="status status--muted">
+                  Aucun dictionnaire chargé
+                </span>
+              </div>
+            </section>
+
+            <section class="controls">
+              <div class="field-group field-group--grow">
+                <label class="label" for="query-input">Mot à rechercher</label>
+                <input
+                  id="query-input"
+                  class="text-input"
+                  type="text"
+                  placeholder="ex. gros"
+                  autocomplete="off"
+                  spellcheck="false"
+                  disabled
+                />
+              </div>
+
+              <div class="field-group field-group--narrow">
+                <label class="label" for="limit-input">Nombre de suggestions</label>
+                <input
+                  id="limit-input"
+                  class="text-input text-input--number"
+                  type="number"
+                  min="0"
+                  max="100"
+                  value="10"
+                />
+              </div>
+
+              <button id="search-button" class="button" type="button" disabled>
+                Rechercher
+              </button>
+            </section>
+
+            <p id="query-error" class="error" hidden role="alert"></p>
+          </div>
+        </aside>
+
+        <main class="results-panel">
+          <section class="results-section" aria-live="polite">
+            <div class="results-header">
+              <h2>Résultats</h2>
+              <span id="results-meta" class="results-meta"></span>
+            </div>
+            <div class="results-scroll">
+              <ol id="results-list" class="results-list"></ol>
+              <p id="empty-state" class="empty-state">Chargez un dictionnaire pour commencer.</p>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <footer class="footer">
+        <span>term-suggestion</span>
+        <span class="dot" aria-hidden="true">·</span>
+        <span>minuscules et chiffres uniquement</span>
+      </footer>
+    </div>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

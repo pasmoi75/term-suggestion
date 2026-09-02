@@ -7,7 +7,8 @@
     "search": "tsx scripts/search-word.ts",
     "build:dico": "tsx scripts/build-dico.ts",
     "perf": "tsx scripts/measure-performance.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "ui": "tsx scripts/serve-ui.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.4",
