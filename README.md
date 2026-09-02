@@ -119,6 +119,7 @@ const wordList = loadWordList();
 const custom = loadWordList({ path: 'chemin/vers/mon-dico.txt' });
 const results = getSuggestions('gros', wordList, 10);
 ```
+
 ## Piste d'amélioration
 
 Pour de meilleures performances (notamment sur de grands dictionnaires), on pourrait ajouter un **seuil maximum de distance** : les mots dont la distance dépasse cette valeur seraient exclus des suggestions.
