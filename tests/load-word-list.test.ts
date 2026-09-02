@@ -40,4 +40,23 @@ describe('loadWordList', () => {
 
     expect(loadWordList({ path })).toEqual(['chat', 'nÃ´tre', 'cafÃ©']);
   });
+
+  it('deduplicates repeated words while preserving first occurrence order', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'term-suggestion-dico-'));
+    const path = join(dir, 'dedupe-dico.txt');
+    writeFileSync(path, 'gros\ngras\ngros\ngras\nchat\n', 'utf-8');
+
+    expect(loadWordList({ path })).toEqual(['gros', 'gras', 'chat']);
+  });
+
+  it('returns an empty list for an empty file or blank lines only', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'term-suggestion-dico-'));
+    const emptyPath = join(dir, 'empty-dico.txt');
+    const blankPath = join(dir, 'blank-dico.txt');
+    writeFileSync(emptyPath, '', 'utf-8');
+    writeFileSync(blankPath, '\n\n\r\n\n', 'utf-8');
+
+    expect(loadWordList({ path: emptyPath })).toEqual([]);
+    expect(loadWordList({ path: blankPath })).toEqual([]);
+  });
 });

@@ -80,7 +80,17 @@
           <section class="results-section" aria-live="polite">
             <div class="results-header">
               <h2>Résultats</h2>
-              <span id="results-meta" class="results-meta"></span>
+              <div class="results-header-actions">
+                <span id="results-meta" class="results-meta"></span>
+                <button
+                  id="download-button"
+                  class="button button--secondary button--compact"
+                  type="button"
+                  disabled
+                >
+                  Télécharger results.txt
+                </button>
+              </div>
             </div>
             <div class="results-scroll">
               <ol id="results-list" class="results-list"></ol>

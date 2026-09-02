@@ -81,6 +81,24 @@ PORT=8080 npm run ui
 2. Saisir un mot à rechercher (minuscules alphanumériques, comme en CLI).
 3. Les suggestions s'affichent en direct au fil de la frappe ; le nombre de résultats est configurable.
 
+> **Note (démo locale)** : dans cette version, la liste complète des mots est renvoyée au navigateur lors du chargement du dictionnaire, puis renvoyée au serveur à chaque recherche. En déploiement typique, le dictionnaire resterait côté serveur (session ou cache) : cette démo ne reflète donc pas les caractéristiques de performance d'une mise en production.
+
+### Endpoints HTTP
+
+#### `POST /api/dictionary`
+
+Parse un fichier dictionnaire.
+
+**Requête :** `{ "content": "<texte du fichier>" }`
+
+**Réponse :** `{ "words": [...], "count": N }`
+
+#### `POST /api/suggestions`
+
+**Requête :** `{ "words": [...], "query": "gros", "limit": 10 }`
+
+**Réponse :** `{ "suggestions": [...] }`
+
 ## Scripts
 
 | Commande | Description |
@@ -90,6 +108,10 @@ PORT=8080 npm run ui
 | `npm run build:dico` | Génère `data/dico.txt` à partir de `data/sources/` |
 | `npm run perf` | Mesure les performances (500k mots, 10 requêtes) |
 | `npm test` | Tests unitaires (Vitest) |
+
+## Tests
+
+Voir [tests/README.md](tests/README.md) pour lancer les tests (tous, un fichier, filtre par nom, mode watch).
 
 ## Structure
 

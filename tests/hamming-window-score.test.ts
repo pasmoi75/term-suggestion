@@ -35,4 +35,13 @@ describe('hammingWindowScore', () => {
   it('uses a single window when word and query have the same length', () => {
     expect(hammingWindowScore('chat', 'chut')).toBe(1);
   });
+
+  it('finds an exact match at a suffix offset', () => {
+    expect(hammingWindowScore('abc', 'xxabc')).toBe(0);
+  });
+
+  it('matches repetitive substrings (aa in aaaa, aba in abababa)', () => {
+    expect(hammingWindowScore('aa', 'aaaa')).toBe(0);
+    expect(hammingWindowScore('aba', 'abababa')).toBe(0);
+  });
 });

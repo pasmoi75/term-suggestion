@@ -14,6 +14,19 @@ describe('validator', () => {
     expect(getSuggestions('gros', wordList, 2)).toEqual(['gros', 'gras']);
   });
 
+  it('accepts digit-only and mixed alphanumeric queries', () => {
+    expect(isValidQueryInput('123')).toBe(true);
+    expect(isValidQueryInput('test0')).toBe(true);
+    expect(getSuggestions('123', ['123', '124', 'abc'], 2)).toEqual(['123', '124']);
+  });
+
+  it('rejects control characters in the query', () => {
+    expect(isValidQueryInput('a\tb')).toBe(false);
+    expect(isValidQueryInput('a\nb')).toBe(false);
+    expect(() => getSuggestions('a\tb', wordList, 2)).toThrow(INVALID_QUERY_FORMAT_MESSAGE);
+    expect(() => getSuggestions('a\nb', wordList, 2)).toThrow(INVALID_QUERY_FORMAT_MESSAGE);
+  });
+
   it('rejects uppercase letters', () => {
     expect(isValidQueryInput('GROS')).toBe(false);
     expect(() => getSuggestions('GROS', wordList, 2)).toThrow(

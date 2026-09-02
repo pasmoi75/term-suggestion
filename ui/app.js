@@ -6,12 +6,15 @@ const searchButton = document.getElementById('search-button');
 const queryError = document.getElementById('query-error');
 const resultsList = document.getElementById('results-list');
 const resultsMeta = document.getElementById('results-meta');
+const downloadButton = document.getElementById('download-button');
 const emptyState = document.getElementById('empty-state');
 
 const DEBOUNCE_MS = 280;
 
 /** @type {string[]} */
 let words = [];
+/** @type {string[]} */
+let currentSuggestions = [];
 let debounceTimer = null;
 let requestId = 0;
 
@@ -38,12 +41,31 @@ function showQueryError(message) {
 function clearResults(message) {
   resultsList.replaceChildren();
   resultsMeta.textContent = '';
+  currentSuggestions = [];
+  downloadButton.disabled = true;
   emptyState.hidden = false;
   emptyState.textContent = message;
 }
 
+function downloadResults() {
+  if (currentSuggestions.length === 0) {
+    return;
+  }
+
+  const content = currentSuggestions.join('\n');
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = 'results.txt';
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
 function renderSuggestions(suggestions) {
   resultsList.replaceChildren();
+  currentSuggestions = suggestions;
+  downloadButton.disabled = suggestions.length === 0;
 
   if (suggestions.length === 0) {
     emptyState.hidden = false;
@@ -200,4 +222,8 @@ searchButton.addEventListener('click', () => {
     clearTimeout(debounceTimer);
   }
   void fetchSuggestions();
+});
+
+downloadButton.addEventListener('click', () => {
+  downloadResults();
 });

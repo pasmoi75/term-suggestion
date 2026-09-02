@@ -48,4 +48,8 @@ describe('getSuggestions', () => {
     expect(getSuggestions('notre', ['nôtre'], 5)).toEqual([]);
     expect(getSuggestions('notre', ['nôtre', 'notre'], 5)).toEqual(['notre']);
   });
+
+  it('excludes accented dictionary entries for an ASCII query (grês/grés vs gres)', () => {
+    expect(getSuggestions('gres', ['grês', 'grés'], 10)).toEqual([]);
+  });
 });
