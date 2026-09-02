@@ -1,0 +1,17 @@
+{
+  "name": "term-suggestion",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "search": "tsx scripts/search-word.ts",
+    "build:dico": "tsx scripts/build-dico.ts",
+    "perf": "tsx scripts/measure-performance.ts",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
