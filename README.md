@@ -18,6 +18,8 @@ Exemple : si on cherche 2 termes approchants de `gros` dans la liste `[gros, gra
 
 ## Format des mots
 
+La requête est validée avant la recherche ; le dictionnaire peut être hétérogène, mais **seuls y participent à la recherche** les mots en minuscules alphanumériques (`[a-z0-9]+`). Les entrées non conformes du dico sont ignorées (voir [Dictionnaire](#dictionnaire)).
+
 ### Entrée (requête)
 
 Le mot recherché doit être en **minuscules** et **alphanumérique** (`[a-z0-9]+`).
@@ -30,7 +32,7 @@ Exemples rejetés : `GROS`, ` chat`, `café`, `mot!`.
 
 ### Dictionnaire
 
-Le fichier dico peut contenir n'importe quels mots (accents, majuscules, espaces, etc.). Lors de la recherche, **seuls les mots en minuscules alphanumériques** (`[a-z0-9]+`) sont pris en compte ; les autres sont **ignorés** sans erreur.
+Le fichier dico peut contenir n'importe quels mots (accents, majuscules, espaces, ponctuation, etc.). **Lors de la recherche**, toute entrée **non alphanumérique** — hors motif `[a-z0-9]+` en minuscules — est **ignorée** : elle n'est ni comparée au terme recherché ni proposée en suggestion, sans lever d'erreur.
 
 Exemple : une recherche sur `notre` ne matchera pas `nôtre` présent dans le dico, mais matchera `notre` s'il y est.
 
