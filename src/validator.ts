@@ -3,6 +3,7 @@ export const INVALID_QUERY_FORMAT_MESSAGE =
 
 const QUERY_FORMAT_REGEX = /^[a-z0-9]+$/;
 
+/** Shared by query validation and dictionary entry filtering during search. */
 export function isValidQueryInput(word: string): boolean {
   return QUERY_FORMAT_REGEX.test(word);
 }

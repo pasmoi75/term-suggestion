@@ -12,8 +12,10 @@ export function getSuggestions(
   const maxHeap = new MaxHeap(numberOfSuggestions);
 
   for (const term of wordList) {
+    // Dictionary entries may contain accents or punctuation; skip non-matching tokens silently.
     if (!isValidQueryInput(term)) continue;
     const score = hammingWindowScore(query, term);
+    // Word is too short to align the full query.
     if (score === null) continue;
     maxHeap.tryAdd({
       term,

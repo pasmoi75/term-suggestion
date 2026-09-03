@@ -1,44 +1,44 @@
 # term-suggestion
 
-On veut prendre un terme et retourner parmi une liste de termes en minuscule, alphanumérique, ceux qui contiennent le terme ou un terme le plus approchant de celui entré.
+Given a search term, return up to N suggestions from a word list. Only lowercase alphanumeric terms participate in matching. A suggestion is a term that contains the query or is closest to it under the project's similarity rule.
 
-On retourne N suggestions (s'il y a égalité dans le nombre de différences, prendre les termes les plus proches en longueur du terme recherché, puis triés par ordre alphabétique).
+When several terms share the same number of differences, prefer those whose length is closest to the query length, then break ties alphabetically.
 
-La similarité est déterminée par le nombre de lettres à remplacer (on ne cherchera pas en insérant des lettres) pour retrouver le terme ; moins il y a de changements à faire, plus le mot est « contenu ».
+Similarity is measured by the number of letter substitutions required to align the query with a substring of the candidate (insertions are not considered). Fewer substitutions mean a closer match.
 
-Exemple : si on cherche 2 termes approchants de `gros` dans la liste `[gros, gras, graisse, agressif, go, ros, gro]` on aura :
+Example: searching for 2 suggestions close to `gros` in `[gros, gras, graisse, agressif, go, ros, gro]` yields:
 
-- `gros` = 0 différence
-- `gras` = 1 différence
-- `graisse` = 2 différences
-- `agressif` = 1 différence
-- `go` = pas du tout similaire (pas assez de lettres)
-- `ros` = pas du tout similaire (pas assez de lettres)
-- `gro` = pas du tout similaire (pas assez de lettres)
+- `gros` = 0 differences
+- `gras` = 1 difference
+- `graisse` = 2 differences
+- `agressif` = 1 difference
+- `go` = not similar (too few letters)
+- `ros` = not similar (too few letters)
+- `gro` = not similar (too few letters)
 
-## Format des mots
+## Word format
 
-La requête est validée avant la recherche ; le dictionnaire peut être hétérogène, mais **seuls y participent à la recherche** les mots en minuscules alphanumériques (`[a-z0-9]+`). Les entrées non conformes du dico sont ignorées (voir [Dictionnaire](#dictionnaire)).
+The query is validated before search runs. The dictionary may contain heterogeneous entries, but **only lowercase alphanumeric words** (`[a-z0-9]+`) participate in search. Non-conforming dictionary entries are ignored (see [Dictionary](#dictionary)).
 
-### Entrée (requête)
+### Input (query)
 
-Le mot recherché doit être en **minuscules** et **alphanumérique** (`[a-z0-9]+`).
+The search term must be **lowercase** and **alphanumeric** (`[a-z0-9]+`).
 
-Sinon, une erreur est levée avant la recherche :
+Otherwise, an error is thrown before search begins:
 
 > Ce n'est pas le format attendu : le mot doit être en minuscules et ne contenir que des caractères alphanumériques ([a-z0-9]).
 
-Exemples rejetés : `GROS`, ` chat`, `café`, `mot!`.
+Rejected examples: `GROS`, ` chat`, `café`, `mot!`.
 
-### Dictionnaire
+### Dictionary
 
-Le fichier dico peut contenir n'importe quels mots (accents, majuscules, espaces, ponctuation, etc.). **Lors de la recherche**, toute entrée **non alphanumérique** — hors motif `[a-z0-9]+` en minuscules — est **ignorée** : elle n'est ni comparée au terme recherché ni proposée en suggestion, sans lever d'erreur.
+The dictionary file may contain any words (accents, uppercase, spaces, punctuation, and so on). **During search**, any entry that is **not alphanumeric** — outside the lowercase `[a-z0-9]+` pattern — is **ignored**: it is neither compared to the query nor returned as a suggestion, and no error is raised.
 
-Exemple : une recherche sur `notre` ne matchera pas `nôtre` présent dans le dico, mais matchera `notre` s'il y est.
+Example: a search for `notre` will not match `nôtre` in the dictionary, but will match `notre` if present.
 
-## Prérequis
+## Prerequisites
 
-- [Node.js](https://nodejs.org/) 18+ (20+ recommandé)
+- [Node.js](https://nodejs.org/) 18+ (20+ recommended)
 
 ## Installation
 
@@ -48,91 +48,91 @@ npm install
 npm run build:dico
 ```
 
-## Utilisation
+## Usage
 
 ```bash
 npm run search -- gros 10
-npm run search -- gros 10 --dico chemin/vers/mon-dico.txt
+npm run search -- gros 10 --dico path/to/my-dico.txt
 ```
 
-Arguments :
+Arguments:
 
-1. terme recherché
-2. nombre de suggestions (optionnel, défaut : 10)
-3. `--dico <chemin>` — dictionnaire à utiliser (optionnel, défaut : `data/dico.txt`)
+1. search term
+2. number of suggestions (optional, default: 10)
+3. `--dico <path>` — dictionary file to use (optional, default: `data/dico.txt`)
 
-## Interface web
+## Web UI
 
-Une interface graphique web permet de tester les suggestions sans passer par la ligne de commande.
+A web interface lets you try suggestions without using the command line.
 
 ```bash
 npm run ui
 ```
 
-Puis ouvrir [http://localhost:3456](http://localhost:3456) dans le navigateur. Le port par défaut est **3456** ; il peut être modifié via la variable d'environnement `PORT` :
+Then open [http://localhost:3456](http://localhost:3456) in your browser. The default port is **3456**; it can be changed with the `PORT` environment variable:
 
 ```bash
 PORT=8080 npm run ui
 ```
 
-**Utilisation :**
+**How to use:**
 
-1. Charger un fichier dictionnaire (`.txt` ou `.json`) via le sélecteur de fichier.
-2. Saisir un mot à rechercher (minuscules alphanumériques, comme en CLI).
-3. Les suggestions s'affichent en direct au fil de la frappe ; le nombre de résultats est configurable.
+1. Load a dictionary file (`.txt` or `.json`) with the file picker.
+2. Enter a search word (lowercase alphanumeric, same rules as the CLI).
+3. Suggestions update as you type; the result count is configurable.
 
-> **Note (démo locale)** : dans cette version, la liste complète des mots est renvoyée au navigateur lors du chargement du dictionnaire, puis renvoyée au serveur à chaque recherche. En déploiement typique, le dictionnaire resterait côté serveur (session ou cache) : cette démo ne reflète donc pas les caractéristiques de performance d'une mise en production.
+> **Note (local demo):** in this version, the full word list is sent to the browser when the dictionary is loaded, then sent back to the server on every search. In a typical deployment, the dictionary would stay on the server (session or cache). This demo therefore does not reflect the performance characteristics of a production setup.
 
-### Endpoints HTTP
+### HTTP endpoints
 
 #### `POST /api/dictionary`
 
-Parse un fichier dictionnaire.
+Parses a dictionary file.
 
-**Requête :** `{ "content": "<texte du fichier>" }`
+**Request:** `{ "content": "<file text>" }`
 
-**Réponse :** `{ "words": [...], "count": N }`
+**Response:** `{ "words": [...], "count": N }`
 
 #### `POST /api/suggestions`
 
-**Requête :** `{ "words": [...], "query": "gros", "limit": 10 }`
+**Request:** `{ "words": [...], "query": "gros", "limit": 10 }`
 
-**Réponse :** `{ "suggestions": [...] }`
+**Response:** `{ "suggestions": [...] }`
 
 ## Scripts
 
-| Commande | Description |
-|----------|-------------|
-| `npm run search -- <mot> [n] [--dico <chemin>]` | Lance une recherche |
-| `npm run ui` | Lance l'interface web graphique (port 3456 par défaut) |
-| `npm run build:dico` | Génère `data/dico.txt` à partir de `data/sources/` |
-| `npm run perf` | Mesure les performances (500k mots, 10 requêtes) |
-| `npm test` | Tests unitaires (Vitest) |
+| Command | Description |
+|---------|-------------|
+| `npm run search -- <word> [n] [--dico <path>]` | Run a search |
+| `npm run ui` | Start the web UI (default port 3456) |
+| `npm run build:dico` | Build `data/dico.txt` from `data/sources/` |
+| `npm run perf` | Benchmark performance (500k words, 10 queries) |
+| `npm test` | Unit tests (Vitest) |
 
 ## Tests
 
-Voir [tests/README.md](tests/README.md) pour lancer les tests (tous, un fichier, filtre par nom, mode watch).
+See [tests/README.md](tests/README.md) for how to run all tests, a single file, filter by name, or use watch mode.
 
 ## Structure
 
 ```
 term-suggestion/
 ├── data/
-│   ├── dico.txt                     # dictionnaire par défaut (généré)
-│   └── sources/                     # listes brutes (entrées de build:dico)
+│   ├── dico.txt                     # default dictionary (generated)
+│   └── sources/                     # raw word lists (build:dico inputs)
 │       ├── french-words.json
 │       ├── francais.txt
 │       └── words_alpha.txt
-├── scripts/                         # entrypoints CLI & outils dev
+├── scripts/                         # CLI entrypoints and dev tools
 │   ├── search-word.ts
 │   ├── build-dico.ts
 │   ├── measure-performance.ts
 │   └── serve-ui.ts
-├── ui/                              # interface web graphique
+├── ui/                              # web UI
 │   ├── index.html
 │   ├── app.js
 │   └── style.css
-├── src/                             # librairie (logique métier)
+├── src/                             # library (core logic)
 │   ├── index.ts
 │   ├── get-suggestions.ts
 │   ├── hamming-window-score.ts
@@ -150,13 +150,13 @@ term-suggestion/
     └── validator.test.ts
 ```
 
-### Rôles des dossiers
+### Folder roles
 
-- **`data/sources/`** — données brutes téléchargées / sources externes. Ce ne sont **pas** des scripts : juste des fichiers de mots.
-- **`data/dico.txt`** — dictionnaire fusionné, produit par `npm run build:dico`.
-- **`scripts/`** — commandes exécutables (`search`, `build:dico`, bench…).
-- **`ui/`** — pages et assets de l'interface web (`npm run ui`).
-- **`src/`** — code réutilisable (algo + chargement dico + validation).
+- **`data/sources/`** — raw downloaded or external word lists. These are **not** scripts, only data files.
+- **`data/dico.txt`** — merged dictionary produced by `npm run build:dico`.
+- **`scripts/`** — runnable commands (`search`, `build:dico`, benchmarks, and so on).
+- **`ui/`** — web UI pages and assets (`npm run ui`).
+- **`src/`** — reusable code (algorithm, dictionary loading, validation).
 
 ## API
 
@@ -164,11 +164,11 @@ term-suggestion/
 import { getSuggestions, loadWordList } from './src/index.ts';
 
 const wordList = loadWordList();
-// ou avec un dico personnalisé :
-const custom = loadWordList({ path: 'chemin/vers/mon-dico.txt' });
+// or with a custom dictionary:
+const custom = loadWordList({ path: 'path/to/my-dico.txt' });
 const results = getSuggestions('gros', wordList, 10);
 ```
 
-## Piste d'amélioration
+## Possible improvement
 
-Pour de meilleures performances (notamment sur de grands dictionnaires), on pourrait ajouter un **seuil maximum de distance** : les mots dont la distance dépasse cette valeur seraient exclus des suggestions.
+For better performance on large dictionaries, a **maximum distance threshold** could exclude candidates whose score exceeds that limit from suggestions.
